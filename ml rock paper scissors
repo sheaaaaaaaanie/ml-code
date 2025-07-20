@@ -1,0 +1,65 @@
+#learns based off your previous moves
+
+from sklearn import svm
+
+history = [1, 1, 3, 2]
+
+input_data = [
+    [1,1],
+    [1,3],
+    [3,2],
+    [2,1]
+]
+
+output_data = [3,2,1,1]
+
+model = svm.SVC()
+model.fit(input_data, output_data)
+
+def user():
+  choice = int(input("Please select one of the following 1) rock, 2) paper, 3) scissors "))
+  return choice
+
+def robot():
+  data_record = [history[-2], history[-1]]
+  current = model.predict([data_record])[0]
+
+  if current == 1:
+    return 2
+  elif current == 2:
+    return 3
+  else:
+    return 1
+
+wins_player = 0
+wins_bot = 0
+total_ties = 0
+
+for _ in range(1,40):
+  player = user()
+  bot = robot()
+
+  if bot == 1 and player == 3 or bot == 2 and player == 1 or bot == 3 and player == 2:
+    print(f"The bot said {bot}")
+    print("You lose!")
+    wins_bot += 1
+
+  elif bot == 1 and player == 2 or bot == 2 and player == 3 or bot == 3 and player == 1:
+    print(f"The bot said {bot}")
+    print("You win!")
+    wins_player += 1
+
+  elif bot == player:
+    print("Tie!")
+
+    total_ties += 1
+
+  history.append(player)
+  input_data.append([history[-3], history[-2]])
+  output_data.append(history[-1])
+
+  model.fit(input_data, output_data)
+
+print("Player: ", wins_player)
+print("Computer: ", wins_bot)
+print("Total ties: ", total_ties)
