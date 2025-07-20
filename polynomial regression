@@ -1,0 +1,36 @@
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.linear_model import Ridge
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.pipeline import make_pipeline
+from sklearn.metrics import mean_squared_error, r2_score
+
+input_data = [
+    [1, 9],
+    [1, 10],
+    [1, 11],
+    [1, 12],
+    [1, 13],
+    [1, 14],
+    [1, 15],
+    [1, 16],
+]
+
+output_data = [0, 10, 20, 30, 40, 30, 20, 10]
+
+model = make_pipeline(PolynomialFeatures(3), Ridge(alpha = 1.0))
+model.fit(input_data, output_data)
+
+x_values = np.arange(9, 17, .05)
+x_plot = np.column_stack((np.ones_like(x_values), x_values))
+y_values = model.predict(x_plot)
+
+plt.figure(figsize = (10,6))
+plt.scatter(np.array(input_data)[:, 1], output_data, label = 'Data Points')
+plt.plot(x_values, y_values, label = 'Polynomial Regression', color = 'red')
+plt.xlabel('Time of Day')
+plt.ylabel('Waiting Time')
+plt.title("polynomial Regression with RIdge Regularization")
+plt.legend()
+plt.grid(True)
+plt.show()
